@@ -9,7 +9,8 @@ spec:
   destination:
     namespace: default
     server: {{ .Values.spec.destination.server }}
-  project: default
+  #project: default
+  project: nginx-demo
   source:
     path: nginx-demo
     repoURL: {{ .Values.spec.source.repoURL }}
