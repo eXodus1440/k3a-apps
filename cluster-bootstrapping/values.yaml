@@ -2,5 +2,5 @@ spec:
   destination:
     server: https://kubernetes.default.svc
   source:
-    repoURL: https://github.com/eXodus1440/k3s-cluster-bootstrapping
+    repoURL: https://github.com/eXodus1440/k3s-apps
     targetRevision: HEAD
