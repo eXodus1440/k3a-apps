@@ -1,0 +1,105 @@
+# Default values for nginx-demo.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: nginx
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 80
+
+certManager:
+  enabled: false
+
+ingress:
+  enabled: true
+  className: ""
+  #annotations: {}
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/router.tls: "true"
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    cert-manager.io/cluster-issuer: nameOfClusterIssuer
+  hosts:
+    - host: nginx-demo.local
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: 
+    - secretName: tls
+      hosts:
+        - nginx-demo.local
+
+## Create an IngressRoute for the app
+## # https://github.com/traefik/traefik-helm-chart/blob/master/traefik/templates/dashboard-ingressroute.yaml
+#ingressRoute:
+#  enabled: true
+#  # Additional ingressRoute annotations (e.g. for kubernetes.io/ingress.class)
+#  annotations: {}
+#  # Additional ingressRoute labels (e.g. for filtering IngressRoute by custom labels)
+#  labels: {}
+#  # The router match rule used for the app ingressRoute
+#  matchRule: PathPrefix(`/dashboard`) || PathPrefix(`/api`)
+#  # Specify the allowed entrypoints to use for the ingress route, (e.g. traefik, web, websecure).
+#  entryPoints: ["websecure"]
+#  # Additional ingressRoute middlewares (e.g. for authentication)
+#  middlewares: []
+#  # TLS options (e.g. secret containing certificate)
+#  tls: {}
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

@@ -1,0 +1,22 @@
+{{- if .Values.certManager.enabled -}}
+{{- $fullName := include "chart-defaults.fullname" . -}}
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ $fullName }}-tls
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "chart-defaults.labels" . | nindent 4 }}
+spec:
+  secretName: {{ $fullName }}-tls
+  dnsNames:
+    - nginx-demo.local
+  issuerRef:
+    name: nameOfClusterIssuer
+    kind: ClusterIssuer
+
+  {{- with .Values.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+{{- end }}
