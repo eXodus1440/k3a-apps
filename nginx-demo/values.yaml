@@ -43,24 +43,41 @@ service:
 certManager:
   enabled: false
 
+hosts:
+  domain: example.io
+  nginx: nginx-demo
+  #https: true
+  #externalIP:
+
 ingress:
   enabled: true
-  className: ""
-  #annotations: {}
+  tls: true
+  path: /
+  pathType: Prefix
   annotations:
     kubernetes.io/ingress.class: traefik
     traefik.ingress.kubernetes.io/router.tls: "true"
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
     cert-manager.io/cluster-issuer: nameOfClusterIssuer
-  hosts:
-    - host: nginx-demo.local
-      paths:
-        - path: /
-          pathType: Prefix
-  tls: 
-    - secretName: tls
-      hosts:
-        - nginx-demo.local
+#
+#ingress:
+#  enabled: true
+#  className: ""
+#  #annotations: {}
+#  annotations:
+#    kubernetes.io/ingress.class: traefik
+#    traefik.ingress.kubernetes.io/router.tls: "true"
+#    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+#    cert-manager.io/cluster-issuer: nameOfClusterIssuer
+#  hosts:
+#    - host: nginx-demo.local
+#      paths:
+#        - path: /
+#          pathType: Prefix
+#  tls: 
+#    - secretName: tls
+#      hosts:
+#        - nginx-demo.local
 
 ## Create an IngressRoute for the app
 ## # https://github.com/traefik/traefik-helm-chart/blob/master/traefik/templates/dashboard-ingressroute.yaml

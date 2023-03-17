@@ -6,6 +6,25 @@ Expand the name of the chart.
 {{- end }}
 
 {{/*
+Returns the hostname assembled using `hosts.nginx` as the prefix, and `hosts.domain` domain.
+*/}}
+{{- define "chart-defaults.hostname" -}}
+{{- printf "%s.%s" .Values.hosts.nginx .Values.hosts.domain -}}
+{{- end -}}
+
+{{/*
+Returns the Url, ex: `http://nginx-demo.example.com` if `hosts.https` is true, it uses https, otherwise http.
+Calls into the `chart-defaults.hostname` function for the hostname part of the url.
+*/}}
+{{- define "chart-defaults.url" -}}
+{{- if .Values.ingress.tls -}}
+{{-   printf "https://%s" (include "chart-defaults.hostname" .) -}}
+{{- else -}}
+{{-   printf "http://%s" (include "chart-defaults.hostname" .) -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.

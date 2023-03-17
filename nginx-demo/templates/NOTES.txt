@@ -1,2 +1,2 @@
 Thank you for installing {{ template "chart-defaults.name" . }}.
-Your release is named {{ .Release.Name }}.
+Your release is named {{ .Release.Name }} and available at {{ template "chart-defaults.url" . }}
